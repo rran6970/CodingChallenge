@@ -16,13 +16,13 @@ def processProducts(productsFile):
             jsonResult = json.loads(product)
 
             if 'product_name' not in jsonResult:
-                raise KeyError('Invalid product on line %d, missing product_name.' % line)
+                raise KeyError('Invalid product on line %d, missing product name.' % line)
             if 'manufacturer' not in jsonResult:
                 raise KeyError('Invalid product on line %d, missing manufacturer.' % line)
             if 'model' not in jsonResult:
                 raise KeyError('Invalid product on line %d, missing model.' % line)
             if 'announced-date' not in jsonResult:
-                raise KeyError('Invalid product on line %d, missing announced-date.' % line)
+                raise KeyError('Invalid product on line %d, missing announced date.' % line)
 
             productName = jsonResult['product_name']
             productManufacturer = jsonResult['manufacturer']
@@ -86,7 +86,7 @@ def matchProducts(listing, products):
     for product in products:
         manufacturer = product.productManufacturerLower
 
-        if manufacturer in title or manufacturer in listing.listManufacturerLower:
+        if manufacturer in title or manufacturer in listing.manufacturerLower:
             if product.regexExact.search(title) \
                 or product.regexExact.search(title_nodash):
 
@@ -104,7 +104,7 @@ def matchProducts(listing, products):
     for product in products:
         manufacturer = product.productManufacturerLower
 
-        if manufacturer in title or manufacturer in listing.listManufacturerLower:
+        if manufacturer in title or manufacturer in listing.manufacturerLower:
             if product.regexTrail.search(title) \
                 or product.regexTrail.search(title_nodash):
 
@@ -122,7 +122,7 @@ def matchProducts(listing, products):
     for product in products:
         manufacturer = product.productManufacturerLower
 
-        if manufacturer in title or manufacturer in listing.listManufacturerLower:
+        if manufacturer in title or manufacturer in listing.manufacturerLower:
             if product.regexLeadTrail.search(title) \
                 or product.regexLeadTrail.search(title_nodash):
 
@@ -176,20 +176,20 @@ def main():
     listings = processListings(listingsFile)
 
     matchResults = matching(products, listings)
+    # print matchResults
 
     with open(resultsFile, 'w') as results:
+        resultsData = ''
         for product in products:
             matchedListings = matchResults.get(product.productName, [])
-            
-            jsonDict = {'product_name': product.productName,
-                        'listings': matchedListings}
-            jsonResults = json.dumps(jsonDict)
-            
-            resultsData = ''
-            for product_name, listings in jsonDict.iteritems():
-                resultsData = resultsData + '{"product_name":' + product_name + '", "listings":' + json.dumps(listings) +'}\n'
 
-            results.write('%s' % resultsData)
+            # jsonDict = {'product_name': product.productName,
+            #            'listings': matchedListings}
+            # jsonResults = json.dumps(jsonDict)
+            
+            resultsData = resultsData + '{"product_name":' + product.productName + ', "listings":' + json.dumps(matchedListings) +'}\n'
+        # results.write('%s\n' % jsonResults)
+        results.write('%s' % resultsData)
 
 if __name__ == '__main__':
     main()

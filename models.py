@@ -65,24 +65,24 @@ class Product(object):
 
 class Listing(object):
     # a class represent a listing loaded from listingsFile
-    def __init__(self, title, listManufacturer, currency, price):
+    def __init__(self, title, manufacturer, currency, price):
         self.title = title
-        self.listManufacturer = listManufacturer
+        self.manufacturer = manufacturer
         self.currency = currency
         self.price = price
 
         self.titleLower = title.lower()
         self.titleLower_nodash = self.titleLower.replace('-', '')
-        self.listManufacturerLower = listManufacturer.lower()
+        self.manufacturerLower = manufacturer.lower()
 
     def __str__(self):
         return json.dumps({'title'       : self.title, 
-                           'listManufacturer': self.listManufacturer, 
+                           'manufacturer': self.manufacturer, 
                            'currency'    : self.currency, 
                            'price'       : self.price})
 
     def listDict(self):
         return {'title'        : self.title,
-                'listManufacturer' : self.listManufacturer,
+                'manufacturer' : self.manufacturer,
                 'currency'     : self.currency,
                 'price'        : self.price}
